@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- common.css -->
+  <style>body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:16px 2%;color:#333;word-wrap:break-word}img{max-width:100%!important}code{margin:0;padding:.2em 0;font-size:85%;background-color:rgba(0,0,0,.04);border-radius:3px}code:after,code:before{letter-spacing:-.2em;content:"\00a0"}pre{margin:0}pre>code{margin:0;padding:0;font-size:100%;word-break:normal;background:0 0;border:0}blockquote{margin:0;padding:0 15px;color:#777;border-left:4px solid #ddd}hr{background-color:#ddd;border:0;height:1px;margin:15px 0}ol{list-style-type:decimal}ol ol,ul ol{list-style-type:lower-latin}ol ol ol,ol ul ol,ul ol ol,ul ul ol{list-style-type:lower-roman}table{border-spacing:0;border-collapse:collapse;margin-top:0;margin-bottom:16px}table th{font-weight:700}table td,table th{padding:6px 13px;border:1px solid #ddd}table tr{background-color:#fff;border-top:1px solid #ccc}table tr:nth-child(even){background-color:#f8f8f8}input[type=checkbox]{cursor:default;margin-right:.5em}.task-list-item{list-style-type:none}.task-list-item+.task-list-item{margin-top:3px}.task-list-item input{float:left;margin:.3em 1em .25em -1.6em;vertical-align:middle}</style>
+  <!-- exported.css -->
+  <style>
+    #nav{margin:5px 10px 10px;font-size:15px}
+    #titlearea{border-bottom:1px solid #ccc;font-size:17px;padding:10px}
+    #contentarea{font-size:15px;margin:16px 0}
+    .cell{outline:0;min-height:20px;margin:5px 0;padding:5px 10px;line-height:1.4}
+    .code-cell{font-size:13px}
+    .latex-cell{white-space:pre-wrap;}
+  </style>
+  <!-- User CSS -->
+  <style> .text-cell {font-size: 14px;}.code-cell {font-size: 12px;}.markdown-cell {font-size: 14px;}.latex-cell {font-size: 14px;}</style>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true,
+        processClass: 'latex-cell'
+      },
+      "HTML-CSS": {
+        preferredFont: "STIX"
+      }
+    };
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/docco.min.css">
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class="tex2jax_ignore">
+  
+  <div id="titlearea">
+    <h2>(9/3) Git hot-fix, Android OptionMenu NPE</h2>
+  </div>
+  <div id="contentarea"><div class='cell text-cell'><h3>Git hot-fix</h3><hr>今天用了一個滿特殊的指令，來解決我們git flow 的問題，大概用法如下</div><pre class='cell code-cell'><code>git checkout -b hot-fix $(git merge-base my-branch other-branch)</code></pre><div class='cell text-cell'>checkout -b hot-fix 代表者要checkout到一個新的 hot-fix branch 上，這時候後面不加參數代表直接在當前 HEAD 的地方創建一個新的 branch 但要是加參數了，就是指定我要 checkout 到哪個 commit 上面，所以之後的 $( ) 裡面是在指定我要checkout 到的位置，那 merge-base 是什麼呢？ 簡單來說就是拿到後面兩個 branch 參數最接近的 parent，所以這行指令代表要去找到&nbsp;my-branch other-branch 最原始的 parent commit 的地方然後開一個新的 hot-fix branch 然後 checkout 到上面。<div>這樣做有什麼用途呢？像現在公司開發的 workflow 主要就是只有一條 master 跟 一條 release 會活著，release 上面包的都是線上的版本，所以每當大功能做完要上線了，就會去 release merge master，但是每當大功能做完，便會有小小的 bug fix 要修正，修正完一些可能會再上線，這時最好回 release 修正比較好，因為要是 master 已經開始開發新的功能，release 就不能直接 merge master，而要用 cherry-pick 的方式，cherry-pick 的方式壞處在於很難看 history，他等於是複製一個 commit 到一個 branch 上，因此在過了好幾天之後，你很難去確定一個在 master 的 commit 有沒有 cherry-pick 到 release上面過，雖然查過之後是有指令能看另一 branch 跟當前 branch 還差哪些 commit ，這時如果有一堆 commit ，就是cherry-pick 到瘋掉......，所以最好是能每次在修東西的時候都 checkout 到 release 上面修，然後再回 master merge release，然而，這真的沒有那麼簡單.....，像有時候可能介面上小改動，不會確定之後馬上要上線，所以當然不適合在 release 上面直接做，以往都直接在 master 直接做，結果隔幾天得知那功能想先上線，但在 master 上面已經有其他功能，就很頭大，因為相關聯的 commit 可能很多個，甚至不是連續的，這時 cherry-pick 一堆 commit甚至會導致程式實際上是沒有給測試人員測試過的，但要 merge 的話就變成要辛苦的補 feature-lock ，所以現在遇到這種狀況，最好的解法就是 checkout 到兩條 branch 最近的 parent 做功能修改，和後再看狀況兩條 branch 自行去 merge。&nbsp;</div></div><div class='cell text-cell'><h3>Android OptionMenu NPE</h3><hr>發現一些之前疏忽的寫法，在某些地方因為 menu button 有 state ，所以會在按下時改他的 state (圖案) ，但是某些狀況，當我的 activity 沒有足夠資料時，應該又連 inflate 都不行，結果有些地方寫這樣的 code:</div><pre class='cell code-cell'><code>@Override
+public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+  inflater.inflate(R.menu.fragment_example, menu);
+  if (simpleDto == null) {
+    return;
+  }
+  //simpleMenuItem is field, will change icon when onOptionMenuSelected 
+  simpleMenuItem = menu.findItem(R.id.simpleItem);
+  setSimpleIcon(simpleDto.getState());
+}</code></pre><div class='cell text-cell'>結果 menu 都 inflate了，卻沒有做 menu.findItem的綁定動作，這樣在 onSelectOptionsMenu 就會遇到NPE，因為 menu顯示了，卻沒綁定，這時要改他 state 必然是 NPE，這樣寫應該更為合理：</div><pre class='cell code-cell'><code>@Override
+public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+  if (simpleDto == null) {
+    return;
+  }
+  inflater.inflate(R.menu.fragment_example, menu);
+  simpleMenuItem = menu.findItem(R.id.simpleItem);
+  setSimpleIcon(simpleDto.getState());
+}</code></pre><div class='cell text-cell'>應該直接在 inflate 的地方就擋下來，反正我沒有資料就是什麼都沒有，等資料都確定有了再自己來 invalidate，雖然這樣說很理所當然，但這樣的錯誤確實在開發的時候很容易疏忽，因為直覺上看起來沒什麼錯。</div></div>
+</body>
+</html>
