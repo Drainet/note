@@ -92,6 +92,223 @@ fn main() {
 }
 
 fn change(some_string: &String) {
+  some_string.push_str(", world");
+}
+```
+上述的程式碼會 compile 失敗，因為試圖對一個 Reference 指標的值進行修改。
+```rust
+fn main() {
+    let mut s = String::from("hello");
+    change(&mut s);
+}
+
+fn change(some_string: &mut String) {
     some_string.push_str(", world");
 }
+```
+上面的程式碼可以成功 compile 跟運作，首先在宣告 s 變數時加了 `mut` 宣告這是一個可變變數，命且在原本只使用 `＆` 的地方改使用 `&mut` 宣告這是 mutable reference，這樣便可在 function 中對於外部 Reference 進行的值進行更改。
+但 mutable reference 指標是有限制的，那就是不能同時將兩個 mutable reference 指標指向同一個指標：
+```rust
+let mut s = String::from("hello");
+let r1 = &mut s;
+let r2 = &mut s;
+println!("{}, {}", r1, r2);
+```
+上述程式碼會 compile 失敗，因為 `r1` 與 `r2` 都嘗試創造 mutable reference 指向 `s`，基本上這個限制是為了防止 data race，`r1` 與 `r2` 若都能對 s 的值進行修改則程式很容易出現為定義的行為。
+但要注意的是這個限制是不能"同時"兩個 mutable reference 指標指向同一個指標，所以透過 Scope 的控制，以下程式碼也是合法的：
+```rust
+let mut s = String::from("hello");
+{
+  let r1 = &mut s;
+} 
+let r2 = &mut s;
+```
+因為將 `r1` 額外用括號所在另一個比較小的 Scope，Scope 結束後 `r1` 也就消失了，所以此時可以再宣告 `r2` 不會發生問題。
+同一時間擁有多個 Reference 指在同一個變數是合法的：
+```rust
+let mut s = String::from("hello");
+let r1 = &s;
+let r2 = &s;
+println!("{} and {}", r1, r2);
+```
+然而在同一時間，若已經有普通的 Reference 指在一個變數上，就不能有 mutable reference 指在同樣的變數上：
+```rust
+let mut s = String::from("hello");
+let r1 = &s;
+let r2 = &mut s;
+```
+上述的程式碼會 compile 失敗，因為 `r1` 已經創造了一個 Reference 指向 `s`，`r2` 沒辦法再對 `s` 創造 mutable refecence。然而還是要記住限制是"同時"，所以下程式碼是合法的：
+```rust
+let mut s = String::from("hello");
+let r1 = &s;
+let r2 = &s;
+println!("{} and {}", r1, r2);
+let r3 = &mut s;
+println!("{}", r3);
+```
+以上程式碼因為 `r1` 與 `r2` 在呼叫 `println` 已經把 Reference 的 Ownership 轉移給 `println` 了所以已經離開 Scope，故能合法宣告 `r3`。
+## Dangling References
+Rust 也能在 compile time 防止創造出 **dangling pointer**，即是防止繼續使用指向的記憶體已經被釋放掉的指標：
+```rust
+fn main() {
+  let reference_to_nothing = dangle();
+}
+
+fn dangle() -> &String {
+  let s = String::from("hello");
+  &s
+}
+```
+上述程式碼會 compile 失敗，因為 fuction `dangle` 嘗試回傳的 Reference 所指向的變數在這個 Scope 就會被釋放掉。
+## Slice Type
+內建的 String 與其他一些 Collection type 提供了 slice 的 API，以 String 為例，能創在一個 Reference 指向 String 區段的 substring：
+```rust
+let s = String::from("hello world");
+let hello = &s[0..5];
+let world = &s[6..11];
+```
+其中 `0..5` 這是 Range 的 literal，所以基本上 API 的形式是這樣 `&s[Range]`，然後因為 String 這個 type 不是以 `[char]` 這種 type 來表示，所以 String 的 slice 有另外一個 type：`&str`：
+```rust
+fn first_word(s: &String) -> &str {
+  let bytes = s.as_bytes();
+  for (i, &item) in bytes.iter().enumerate() {
+    if item == b' ' {
+      return &s[0..i];
+    }
+  }
+  &s[..]
+}
+```
+有趣的是像 `"hello world"` 這個 literal 其實就是 `&str` type，所以如果設計 Rust 的 function 直接使用 `&str` 來當作 parameter type 使用上會更加方便：
+```rust
+fn main() {
+  let my_string = String::from("hello world");
+  let word = first_word(&my_string[..]);
+  let my_string_literal = "hello world";
+  let word = first_word(&my_string_literal[..]);
+  let word = first_word(my_string_literal);
+}
+
+fn first_word(s: &str) -> &str {
+//...
+```
+而使用 Slice type 來指向變數因為也是創造一個 Reference，所以也會防止變數被改變：
+```rust
+fn main() {
+  let mut s = String::from("hello world");
+  let word = first_word(&s);
+  s.clear();
+  println!("the first word is: {}", word);
+}
+```
+上述程式碼不會 compile 成功，這也保證了使用 Slice type 的安全性。
+其他內建的 Collection type 也都支援 Slice API，而因為本身就是 Collection type，所以像是 `[i32]` 的 slice type 就是很直覺的像這樣表示：`&[i32]`。
+### Lifetime
+**Lifetime** 指的其實就是一個 variable 能夠存活的 Scope，大部分的時候 Lifetime 都有辦法靠 Scope 自動偵測，像是到目前為止提到過的程式碼，Lifetime 都是有辦法自動偵測的，但還是會出現無法自動偵測的狀況，就需要接下來提到的 Lifetime Annotation Syntax 來解決。
+### Lifetime Annotation Syntax
+看看以下的程式碼邏輯：
+```rust
+fn main() {
+  let string1 = String::from("abcd");
+  let string2 = "xyz";
+  let result = longest(string1.as_str(), string2);
+  println!("The longest string is {}", result);
+}
+
+fn longest(x: &str, y: &str) -> &str {
+  if x.len() > y.len() {
+    x
+  } else {
+    y
+  }
+}
+```
+以上的程式碼 compile 會失敗，主要的原因在 `longest` 這個 function 回傳的 `&str` type，這個 `&str` 是一個 reference type，然而 compiler 無法確認它的 Lifetime 是綁定在哪一個 variable 上，事實上連我們也沒有辦法確認，因為回傳哪個結果是在 runtime 依據 `if` 的結果來決定的。
+官方提供了一個 annotation syntax 來解決這個問題：
+```rust
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+  if x.len() > y.len() {
+    x
+  } else {
+    y
+  }
+}
+```
+其中 `<'a>` 很像一般的 Generic type 定義語法，差別在於內部一定要使用 (`'`) 開頭，並且通常是使用非常短的全小寫單字來定義的，`<'a>` 定義了一個 Lifetime 並且同時加到了傳進來的兩個 parameter 以及 return type 上，這表示回傳的 Reference 的 Lifetime 必須小於等於傳入的兩個 parameter 的 Lifetime，如此 compiler 就有辦法判斷 Lifetime 了：
+```rust
+fn main() {
+  let string1 = String::from("long string is long");
+  {
+    let string2 = String::from("xyz");
+    let result = longest(string1.as_str(), string2.as_str());
+    println!("The longest string is {}", result);
+  }
+}
+```
+以上程式碼能 compile 成功，因為回傳的 Reference 的 Lifetime 與較小的 `string2` 一樣在括號內，所以 `println` 能合法使用 `result`，反之：
+```rust
+fn main() {
+  let string1 = String::from("long string is long");
+  let result;
+  {
+    let string2 = String::from("xyz");
+    result = longest(string1.as_str(), string2.as_str());
+  }
+  println!("The longest string is {}", result);
+}
+```
+則會 compile 失敗，因為已經過了 `string2` 所在的 Scope 仍嘗試使用 result。
+在使用 Lifetime annotation 的時候也能注意只需要標注到你需要使用的 Lifetime 就好，譬如：
+```rust
+fn longest<'a>(x: &'a str, y: &str) -> &'a str {
+  x
+}
+```
+上述程式碼就沒有為 `y` 標上 annotation，因為 function 直接回傳 `x`，跟 `y` 完全沒有關係。
+Lifetime annotation 也會強制回傳的 Reference 一定要對應到指定的 Lifetime：
+```rust
+fn longest<'a>(x: &str, y: &str) -> &'a str {
+  let result = String::from("really long string");
+  result.as_str()
+}
+```
+上述程式碼會 compile 失敗，因為回傳的完全是一個跟 `x` 與 `y` 毫無相干的 Reference。
+同樣的 Annotation 也能用在 `struct` 上：
+```rust
+struct ImportantExcerpt<'a> {
+  part: &'a str,
+}
+
+fn main() {
+  let novel = String::from("Call me Ishmael. Some years ago...");
+  let first_sentence = novel.split('.').next().expect("Could not find a '.'");
+  let i = ImportantExcerpt {
+    part: first_sentence,
+  };
+}
+```
+同樣的規則，`first_sentence` 的 Lifetime 大於等於 `i`，所以上述程式碼是合法的。
+### Lifetime Elision
+可能你有注意到其實在更之前的程式碼就有用到傳入 Reference 並且回傳 Reference 沒加 Lifetime annotation 並且 compile 也能成功，像是這個 function：
+```rust
+fn first_word(s: &str) -> &str {
+  let bytes = s.as_bytes();
+  for (i, &item) in bytes.iter().enumerate() {
+    if item == b' ' {
+      return &s[0..i];
+    }
+  }
+  &s[..]
+}
+```
+實際上這段程式碼在 Rust 1.0 以前是沒辦法 compile 的，但是官方有注意到很多人寫這種類型的 function，所以乾脆在這種只有一個 parameter 以及 return type 相同的時候自動在 compile 時幫忙補上 annotation，所以這段程式碼實際上會被轉成這樣：
+```rust
+fn first_word<'a>(s: &'a str) -> &'a str {
+//...
+```
+基本上官方創造了一些規則叫做 **lifetime elision rules**，這些規則會在 compile 時偵測所有能夠套用的地方，隨著官方發現開發者還會很常用哪些 pattern，這些規則未來還會持續增加。
+### The Static Lifetime
+還有一個 `'static` 的關鍵字能指定 Reference 能存活於整個程式的生命週期：
+```rust
+let s: &'static str = "I have a static lifetime.";
 ```
