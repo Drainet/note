@@ -1,4 +1,4 @@
-##Covariant, Contravariant, Invariant in Java Generic
+## Covariant, Contravariant, Invariant in Java Generic
 因為最近正在讀 [Java Generic and Collections](https://www.oreilly.com/library/view/java-generics-and/0596527756/) 這本書，其中某些地方真的獲益良多，在這裡寫一篇關於 Covariant, Contravariant, Invariant 概念的簡短介紹（ 這篇不涉及 Generic Class 的設計 ）。
 要了解這些概念，剛開始最重要的是了解什麼是 Subtype，在 Java，一個可以判斷物件 A 的 type 是否為物件 B 的 type 的 subtype 的最簡單方法，就是 `B = A;` 這個 expression 是否合法 ( 有辦法 compile )，只要滿足這個條件，便可以說 A 的 type 是 B 的 type 的 subtype，而 B 是 A 的 supertype。
 ```java
