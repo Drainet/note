@@ -147,7 +147,7 @@ let r3 = &mut s;
 println!("{}", r3);
 ```
 以上程式碼因為 `r1` 與 `r2` 在呼叫 `println` 已經把 Reference 的 Ownership 轉移給 `println` 了所以已經離開 Scope，故能合法宣告 `r3`。
-## Dangling References
+### Dangling References
 Rust 也能在 compile time 防止創造出 **dangling pointer**，即是防止繼續使用指向的記憶體已經被釋放掉的指標：
 ```rust
 fn main() {
@@ -160,7 +160,7 @@ fn dangle() -> &String {
 }
 ```
 上述程式碼會 compile 失敗，因為 fuction `dangle` 嘗試回傳的 Reference 所指向的變數在這個 Scope 就會被釋放掉。
-## Slice Type
+### Slice Type
 內建的 String 與其他一些 Collection type 提供了 slice 的 API，以 String 為例，能創在一個 Reference 指向 String 區段的 substring：
 ```rust
 let s = String::from("hello world");
