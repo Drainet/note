@@ -39,7 +39,7 @@ int binarySearch(int[] nums, int target) {
 以上程式碼邏輯可能看似沒什麼問題，但我們下面模擬看看
 `nums = [1, 2, 2, 4, 5, 7], target = 3`
 
-![Test SVG!](/binary_search_note_images/text_list.svg "SVG")
+![Test SVG!](binary_search_note_images/text_list.svg "SVG")
 
 
 |L| |M| | |H|
