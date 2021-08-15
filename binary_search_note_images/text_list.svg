@@ -1,0 +1,16 @@
+<svg width="244" height="44" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <rect stroke-width="4" id="svg_10" height="40" width="40" y="2" x="2" stroke="#000" fill="#fff"/>
+  <rect stroke-width="4" id="svg_11" height="40" width="40" y="2" x="42" stroke="#000" fill="#fff"/>
+  <rect stroke-width="4" id="svg_12" height="40" width="40" y="2" x="82" stroke="#000" fill="#fff"/>
+  <rect stroke-width="4" id="svg_13" height="40" width="40" y="2" x="122" stroke="#000" fill="#fff"/>
+  <rect stroke-width="4" id="svg_14" height="40" width="40" y="2" x="162" stroke="#000" fill="#fff"/>
+  <rect stroke-width="4" id="svg_15" height="40" width="40" y="2" x="202" stroke="#000" fill="#fff"/>
+  <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" id="svg_16" y="30.5" x="16" stroke-width="2" stroke="#000" fill="#fff">1</text>
+  <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" id="svg_17" y="29.5" x="55" stroke-width="2" stroke="#000" fill="#fff">2</text>
+  <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" id="svg_18" y="29.5" x="95" stroke-width="2" stroke="#000" fill="#fff">2</text>
+  <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" id="svg_19" y="29.5" x="134" stroke-width="2" stroke="#000" fill="#fff">4</text>
+  <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" id="svg_20" y="29.5" x="175" stroke-width="2" stroke="#000" fill="#fff">5</text>
+  <text transform="rotate(-1 220.57 21.25)" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" id="svg_21" y="30" x="214" stroke-width="2" stroke="#000" fill="#fff">7</text>
+ </g>
+</svg>
