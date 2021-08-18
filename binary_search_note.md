@@ -39,12 +39,28 @@ int binarySearch(int[] nums, int target) {
 以上程式碼邏輯可能看似沒什麼問題，但我們下面模擬看看
 `nums = [1, 2, 2, 4, 5, 7], target = 3`
 
-![Test SVG!](binary_search_note_images/text_list.svg "SVG")
+<svg xmlns="http://www.w3.org/2000/svg" width="244" height="44">
+ <g stroke="#fff" stroke-width="4" fill="none">
+  <rect height="40" width="40" y="2" x="2"/>
+  <rect height="40" width="40" y="2" x="42"/>
+  <rect height="40" width="40" y="2" x="82"/>
+  <rect height="40" width="40" y="2" x="122"/>
+  <rect height="40" width="40" y="2" x="162"/>
+  <rect height="40" width="40" y="2" x="202"/>
+  <rect height="40" width="40" y="2" x="2" stroke="#FF0000"/>
+  <rect height="40" width="40" y="2" x="202" stroke="#FF0000"/>
+  <rect height="40" width="40" y="2" x="82" stroke="#FF0000"/>
+ </g>
+ <g stroke-width="2" stroke="#fff" fill="none">
+    <text y="50%" alignment-baseline="central" text-anchor="middle" x="22">1</text>
+    <text y="50%" alignment-baseline="central" text-anchor="middle" x="62">2</text>
+    <text y="50%" alignment-baseline="central" text-anchor="middle" x="102">2</text>
+    <text y="50%" alignment-baseline="central" text-anchor="middle" x="142">4</text>
+    <text y="50%" alignment-baseline="central" text-anchor="middle" x="182">5</text>
+    <text y="50%" alignment-baseline="central" text-anchor="middle" x="222">7</text>
+  </g>
+</svg>
 
-
-|L| |M| | |H|
-|-|-|-|-|-|-|
-|1|2|2|4|5|7|
 ↓
 | | |L|M| |H|
 |-|-|-|-|-|-|
@@ -59,13 +75,20 @@ int binarySearch(int[] nums, int target) {
 Binary Search 本質上就是不斷的將結果的可能出現區間刪去掉已經判斷為不可能的那一半，最後在不段縮小的區間內找到答案，而我認為大多數寫出問題的 Binary Search 程式的問題出在**沒有在刪除區間時確實把所有已判斷為可刪除的值從區間刪除**，從而導致無窮迴圈。
 ### 搜尋區間的定義方式
 最常看到的搜尋區間定義方式應該就這兩種：
-|    程式碼   |   區間定義   |              起始值              |
-|-------------|--------------|----------------------------------|
-|`low <= high`| `[low, high]`|`low = 0, high = array.length    `|
-|`low < high` | `[low, high)`|`low = 0, high = array.length - 1`|
-
-
-|l|1|m|3|4|h|
-|-|-|-|-|-|-|
-|1|2|2|~~4~~|~~**5**~~|~~7~~|
-
+<table>
+  <tr>
+    <td>程式碼</td>
+    <td>區間定義</td>
+    <td>起始值 </td>
+  </tr>
+  <tr>
+    <td>low <= high</td>
+    <td>[low, high]</td>
+    <td>low = 0, high = array.length</td>
+  </tr>
+  <tr>
+    <td>low < high</td>
+    <td>[low, high)</td>
+    <td>low = 0, high = array.length - 1</td>
+  </tr>
+</table>
