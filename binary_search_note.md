@@ -54,9 +54,9 @@ int binarySearch(int[] nums, int target) {
   <rect height="40" width="40" y="2" x="122"/>
   <rect height="40" width="40" y="2" x="162"/>
   <rect height="40" width="40" y="2" x="202"/>
-  <rect height="40" width="40" y="2" x="2" stroke="#006400"/>
-  <rect height="40" width="40" y="2" x="202" stroke="#006400"/>
-  <rect height="40" width="40" y="2" x="82" stroke="#006400"/>
+  <rect height="40" width="40" y="2" x="2" stroke="#aa759f"/>
+  <rect height="40" width="40" y="2" x="202" stroke="#aa759f"/>
+  <rect height="40" width="40" y="2" x="82" stroke="#aa759f"/>
  </g>
  <g  transform="translate(0,40)" stroke-width="2" stroke="#fff" fill="none">
     <text y="25%" alignment-baseline="central" text-anchor="middle"  x="22">1</text>
@@ -84,9 +84,9 @@ int binarySearch(int[] nums, int target) {
   <rect height="40" width="40" y="2" x="122"/>
   <rect height="40" width="40" y="2" x="162"/>
   <rect height="40" width="40" y="2" x="202"/>
-  <rect height="40" width="40" y="2" x="122" stroke="#006400"/>
-  <rect height="40" width="40" y="2" x="202" stroke="#006400"/>
-  <rect height="40" width="40" y="2" x="82" stroke="#006400"/>
+  <rect height="40" width="40" y="2" x="122" stroke="#aa759f"/>
+  <rect height="40" width="40" y="2" x="202" stroke="#aa759f"/>
+  <rect height="40" width="40" y="2" x="82" stroke="#aa759f"/>
  </g>
  <g  transform="translate(0,40)" stroke-width="2" stroke="#fff" fill="none">
     <text y="25%" alignment-baseline="central" text-anchor="middle"  x="22">1</text>
@@ -113,9 +113,9 @@ int binarySearch(int[] nums, int target) {
   <rect height="40" width="40" y="2" x="122"/>
   <rect height="40" width="40" y="2" x="162"/>
   <rect height="40" width="40" y="2" x="202"/>
-  <rect height="40" width="40" y="2" x="122" stroke="#006400"/>
+  <rect height="40" width="40" y="2" x="122" stroke="#aa759f"/>
 
-  <rect height="40" width="40" y="2" x="82" stroke="#006400"/>
+  <rect height="40" width="40" y="2" x="82" stroke="#aa759f"/>
  </g>
  <g  transform="translate(0,40)" stroke-width="2" stroke="#fff" fill="none">
     <text y="25%" alignment-baseline="central" text-anchor="middle"  x="22">1</text>
