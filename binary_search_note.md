@@ -37,40 +37,97 @@ int binarySearch(int[] nums, int target) {
 }
 ```
 以上程式碼邏輯可能看似沒什麼問題，但我們下面模擬看看
-`nums = [1, 2, 2, 4, 5, 7], target = 3`
 
-<svg xmlns="http://www.w3.org/2000/svg" width="244" height="44">
- <g stroke="#fff" stroke-width="4" fill="none">
+`nums = [1, 2, 2, 4, 5, 7], target = 3`：
+
+<svg xmlns="http://www.w3.org/2000/svg" width="244" height="84">
+
+ <g stroke-width="2" stroke="#fff" fill="none">
+  <text y="25%" alignment-baseline="central" text-anchor="middle"  x="22">Low</text>
+  <text y="25%" alignment-baseline="central" text-anchor="middle" x="102">Mid</text>
+  <text y="25%" alignment-baseline="central" text-anchor="middle" x="222">High</text>
+ </g>
+ <g transform="translate(0,40)" stroke="#fff" stroke-width="4" fill="none">
   <rect height="40" width="40" y="2" x="2"/>
   <rect height="40" width="40" y="2" x="42"/>
   <rect height="40" width="40" y="2" x="82"/>
   <rect height="40" width="40" y="2" x="122"/>
   <rect height="40" width="40" y="2" x="162"/>
   <rect height="40" width="40" y="2" x="202"/>
-  <rect height="40" width="40" y="2" x="2" stroke="#FF0000"/>
-  <rect height="40" width="40" y="2" x="202" stroke="#FF0000"/>
-  <rect height="40" width="40" y="2" x="82" stroke="#FF0000"/>
+  <rect height="40" width="40" y="2" x="2" stroke="#006400"/>
+  <rect height="40" width="40" y="2" x="202" stroke="#006400"/>
+  <rect height="40" width="40" y="2" x="82" stroke="#006400"/>
  </g>
- <g stroke-width="2" stroke="#fff" fill="none">
-    <text y="50%" alignment-baseline="central" text-anchor="middle" x="22">1</text>
-    <text y="50%" alignment-baseline="central" text-anchor="middle" x="62">2</text>
-    <text y="50%" alignment-baseline="central" text-anchor="middle" x="102">2</text>
-    <text y="50%" alignment-baseline="central" text-anchor="middle" x="142">4</text>
-    <text y="50%" alignment-baseline="central" text-anchor="middle" x="182">5</text>
-    <text y="50%" alignment-baseline="central" text-anchor="middle" x="222">7</text>
+ <g  transform="translate(0,40)" stroke-width="2" stroke="#fff" fill="none">
+    <text y="25%" alignment-baseline="central" text-anchor="middle"  x="22">1</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="62">2</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="102">2</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="142">4</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="182">5</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="222">7</text>
   </g>
 </svg>
 
 ↓
-| | |L|M| |H|
-|-|-|-|-|-|-|
-|1|2|2|4|5|7|
+
+<svg xmlns="http://www.w3.org/2000/svg" width="244" height="84">
+
+ <g stroke-width="2" stroke="#fff" fill="none">
+  <text y="25%" alignment-baseline="central" text-anchor="middle" x="102">Low</text>
+  <text y="25%" alignment-baseline="central" text-anchor="middle"  x="142">Mid</text>
+  <text y="25%" alignment-baseline="central" text-anchor="middle" x="222">High</text>
+ </g>
+ <g transform="translate(0,40)" stroke="#fff" stroke-width="4" fill="none">
+  <rect height="40" width="40" y="2" x="2"/>
+  <rect height="40" width="40" y="2" x="42"/>
+  <rect height="40" width="40" y="2" x="82"/>
+  <rect height="40" width="40" y="2" x="122"/>
+  <rect height="40" width="40" y="2" x="162"/>
+  <rect height="40" width="40" y="2" x="202"/>
+  <rect height="40" width="40" y="2" x="122" stroke="#006400"/>
+  <rect height="40" width="40" y="2" x="202" stroke="#006400"/>
+  <rect height="40" width="40" y="2" x="82" stroke="#006400"/>
+ </g>
+ <g  transform="translate(0,40)" stroke-width="2" stroke="#fff" fill="none">
+    <text y="25%" alignment-baseline="central" text-anchor="middle"  x="22">1</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="62">2</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="102">2</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="142">4</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="182">5</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="222">7</text>
+  </g>
+</svg>
+
 ↓
-| | |L/M|H| | |
-|-|-|-  |-|-|-|
-|1|2|2  |4|5|7|
-可以看到最後一步開始無窮迴圈了，因為在最後一步時 `(High + Low) / 2` 永遠都等於 2 `//TODO`
-以上的 Binary Search 實作其實藏有一些問題，但如果對於 Binary Search 沒有很好的理解可能不會發現有問題，又或著是察覺得到有問題，但可能要實際上丟幾組測試資料去跑跑看才能發現出了問題，然後在對應的地方補個 +1 或 -1 去設法解掉，然而這種做法一是可能沒有解決完全部可能出現的問題，二是本身還是對於問題的本質不了解。
+
+<svg xmlns="http://www.w3.org/2000/svg" width="244" height="84">
+
+ <g stroke-width="2" stroke="#fff" fill="none">
+  <text y="25%" alignment-baseline="central" text-anchor="middle" x="102">L/M</text>
+  <text y="25%" alignment-baseline="central" text-anchor="middle"  x="142">High</text>
+ </g>
+ <g transform="translate(0,40)" stroke="#fff" stroke-width="4" fill="none">
+  <rect height="40" width="40" y="2" x="2"/>
+  <rect height="40" width="40" y="2" x="42"/>
+  <rect height="40" width="40" y="2" x="82"/>
+  <rect height="40" width="40" y="2" x="122"/>
+  <rect height="40" width="40" y="2" x="162"/>
+  <rect height="40" width="40" y="2" x="202"/>
+  <rect height="40" width="40" y="2" x="122" stroke="#006400"/>
+
+  <rect height="40" width="40" y="2" x="82" stroke="#006400"/>
+ </g>
+ <g  transform="translate(0,40)" stroke-width="2" stroke="#fff" fill="none">
+    <text y="25%" alignment-baseline="central" text-anchor="middle"  x="22">1</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="62">2</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="102">2</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="142">4</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="182">5</text>
+    <text y="25%" alignment-baseline="central" text-anchor="middle" x="222">7</text>
+  </g>
+</svg>
+
+可以看到最後一步開始無窮迴圈了，因為在最後一步時 `(High + Low) / 2` 永遠都等於 2，那要如何修改才是對的呢？是把 `high = mid` 改成 `high = mid - 1`，還是把 `low = mid` 改成 `low = mid + 1`，還是都改？有時候可能運氣好猜對了但對於這件事的本質沒有很好的理解，而且也有可能只是在當前這個 case 對了，我認為理解搜尋區間的定義就可以更輕鬆的判斷如何寫才是對的。
 ## 搜尋區間
 Binary Search 本質上就是不斷的將結果的可能出現區間刪去掉已經判斷為不可能的那一半，最後在不段縮小的區間內找到答案，而我認為大多數寫出問題的 Binary Search 程式的問題出在**沒有在刪除區間時確實把所有已判斷為可刪除的值從區間刪除**，從而導致無窮迴圈。
 ### 搜尋區間的定義方式
@@ -92,3 +149,8 @@ Binary Search 本質上就是不斷的將結果的可能出現區間刪去掉已
     <td>low = 0, high = array.length - 1</td>
   </tr>
 </table>
+
+|程式碼|區間定義|起始值|
+|---|---|---|
+|low <= high|[low, high]|low = 0, high = array.length|
+|low < high|[low, high)|low = 0, high = array.length - 1|
