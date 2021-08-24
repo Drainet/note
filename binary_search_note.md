@@ -245,3 +245,5 @@ int binarySearch(int[] nums, int target) {
 }
 ```
 可以看到 `nums[mid] > target` 時，`nums[mid]` 以及其右邊的區間都可以從區間中刪除了，而這段程式碼使用 `low <= high` 來定義區間，代表 `high` 也在區間內，然而使用 `high = mid` 則少刪除了 `mid` 這個位置，應該使用 `high = mid - 1`，同樣的在 `else` 的分支使用 `low = mid` 也是少刪除了 `mid` 這個位置，應該使用 `low = mid + 1`，以這個方式也有辦法理解什麼時候會出問題，當 `nums[mid] != target` 以及 `(high + low) / 2 == high` 或 `(high + low) / 2 == low` 時會發生無窮迴圈。
+
+## Work In Progress...
