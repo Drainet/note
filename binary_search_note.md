@@ -3,7 +3,7 @@ Binary Search 是一個是一個很基礎的演算法，用於在以排序過的
 ```java
 int binarySearch(int[] nums, int target) {
   int low = 0;
-  int high = nums.length - 1;
+  int high = nums.length;
   while (low < high) {
     int mid = (high - low) / 2 + low;
     if (nums[mid] > target) {
@@ -22,7 +22,7 @@ int binarySearch(int[] nums, int target) {
 ```java
 int binarySearch(int[] nums, int target) {
   int low = 0;
-  int high = nums.length;
+  int high = nums.length - 1;
   while (low <= high) {
     int mid = (high - low) / 2 + low;
     if (nums[mid] > target) {
@@ -230,7 +230,7 @@ int binarySearch(int[] nums, int target) {
 ```java
 int binarySearch(int[] nums, int target) {
   int low = 0;
-  int high = nums.length;
+  int high = nums.length - 1;
   while (low <= high) {
     int mid = (high - low) / 2 + low;
     if (nums[mid] > target) {
